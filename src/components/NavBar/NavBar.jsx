@@ -1,3 +1,5 @@
+import React from 'react';
+import { node } from 'prop-types';
 import { Nav, Navbar } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { withRouter } from 'react-router-dom';
@@ -7,7 +9,7 @@ const NavBar = (props) => {
     event.preventDefault();
     // auth logic here
     console.log('Logged out');
-    props.history.push("/");
+    props.history.push('/');
   };
 
   return(
@@ -25,7 +27,11 @@ const NavBar = (props) => {
         </Nav>
       </Navbar.Collapse>
     </Navbar>
-  )
-}
+  );
+};
+
+NavBar.propTypes = {
+  history: node,
+};
 
 export default withRouter(NavBar);

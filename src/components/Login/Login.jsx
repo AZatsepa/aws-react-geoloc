@@ -1,10 +1,11 @@
+import React from 'react';
 import { Form, Button } from 'react-bootstrap';
 
 function Login() {
   const handleLogIn = (event) => {
     event.preventDefault();
     // auth logic here
-    console.log('Submitted!')
+    console.log('Submitted!');
   };
 
   return(
@@ -13,7 +14,7 @@ function Login() {
         <Form.Label>Email address</Form.Label>
         <Form.Control type="email" placeholder="Enter email" />
         <Form.Text className="text-muted">
-          We'll never share your email with anyone else.
+          We will never share your email with anyone else.
         </Form.Text>
       </Form.Group>
 
@@ -28,7 +29,7 @@ function Login() {
         Login
       </Button>
     </Form>
-  )
+  );
 }
 
 export default Login;
