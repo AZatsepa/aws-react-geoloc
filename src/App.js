@@ -9,6 +9,7 @@ import ForgotPasswordVerification from './components/auth/ForgotPasswordVerifica
 import ChangedPasswordConfirmation from './components/auth/ChangedPasswordConfirmation/ChangedPasswordConfirmation';
 import ChangePassword from './components/auth/ChangePassword/ChangePassword';
 import SignUp from './components/auth/SignUp';
+import GoogleMap from './components/GoogleMap/GoogleMap';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -51,6 +52,7 @@ function App() {
           <Route exact path="/forgot-password" render={(props) => <ForgotPassword auth={authProps} {...props} />}/>
           <Route exact path="/forgot-password-verification" render={(props) => <ForgotPasswordVerification auth={authProps} {...props} />}/>
           <Route exact path="/changed-password-confirmation" render={(props) => <ChangedPasswordConfirmation auth={authProps} {...props} />}/>
+          <Route exact path="/google-map" render={(props) => <GoogleMap auth={authProps} {...props} />}/>
         </Switch>
       </Router>
     </div>

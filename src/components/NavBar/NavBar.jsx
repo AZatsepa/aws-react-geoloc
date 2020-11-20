@@ -30,6 +30,9 @@ const NavBar = (props) => {
           {
             props.auth.isAuthenticated ?
               <>
+                <LinkContainer to="/google-map">
+                  <Nav.Link>Google Map</Nav.Link>
+                </LinkContainer>
                 <LinkContainer to="/change-password">
                   <Nav.Link>Change password</Nav.Link>
                 </LinkContainer>
