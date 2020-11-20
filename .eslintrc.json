@@ -36,7 +36,8 @@
         "semi": [
             "error",
             "always"
-        ]
+        ],
+        "no-console": "warn"
     },
     "ignorePatterns": [
         "reportWebVitals.js"

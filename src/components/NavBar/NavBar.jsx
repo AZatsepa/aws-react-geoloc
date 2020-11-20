@@ -1,15 +1,21 @@
 import React from 'react';
-import { object } from 'prop-types';
+import {func, object, shape, bool} from 'prop-types';
 import { Nav, Navbar } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
+import { Auth } from 'aws-amplify';
 import { withRouter } from 'react-router-dom';
 
 const NavBar = (props) => {
-  const handleLogout = (event) => {
+  const handleLogout = async (event) => {
     event.preventDefault();
-    // auth logic here
-    console.log('Logged out');
-    props.history.push('/');
+    try {
+      await Auth.signOut();
+      props.auth.setIsAuthenticated(false);
+      props.auth.setUser(null);
+      props.history.push('/');
+    } catch(error) {
+      console.eror(error.message);
+    }
   };
 
   return(
@@ -19,11 +25,15 @@ const NavBar = (props) => {
       </LinkContainer>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
+
         <Nav className="mr-auto">
-          <LinkContainer to="/login">
-            <Nav.Link>Login</Nav.Link>
-          </LinkContainer>
-          <Nav.Link href="/" onClick={handleLogout}>Logout</Nav.Link>
+          {
+            props.auth.isAuthenticated ?
+              <Nav.Link href="/" onClick={handleLogout}>Logout</Nav.Link> :
+              <LinkContainer to="/login">
+                <Nav.Link>Login</Nav.Link>
+              </LinkContainer>
+          }
         </Nav>
       </Navbar.Collapse>
     </Navbar>
@@ -32,6 +42,10 @@ const NavBar = (props) => {
 
 NavBar.propTypes = {
   history: object,
+  auth: shape({
+    setIsAuthenticated: func,
+    isAuthenticated: bool,
+  })
 };
 
 export default withRouter(NavBar);
