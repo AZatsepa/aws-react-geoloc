@@ -2,8 +2,19 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import './index.css';
+import Amplify from 'aws-amplify';
+import awsConfig from './aws-exports';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+
+Amplify.configure({
+  Auth: {
+    mandatorySignIn: true,
+    region: awsConfig.cognito.REGION,
+    userPoolId: awsConfig.cognito.USER_POOL_ID,
+    userPoolWebClientId: awsConfig.cognito.APP_CLIENT_ID
+  }
+});
 
 ReactDOM.render(
   <BrowserRouter>

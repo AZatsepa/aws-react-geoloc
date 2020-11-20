@@ -1,5 +1,5 @@
 import React from 'react';
-import { node } from 'prop-types';
+import { object } from 'prop-types';
 import { Nav, Navbar } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import { withRouter } from 'react-router-dom';
@@ -31,7 +31,7 @@ const NavBar = (props) => {
 };
 
 NavBar.propTypes = {
-  history: node,
+  history: object,
 };
 
 export default withRouter(NavBar);
