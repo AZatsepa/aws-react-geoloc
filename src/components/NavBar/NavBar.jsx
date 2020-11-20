@@ -14,7 +14,7 @@ const NavBar = (props) => {
       props.auth.setUser(null);
       props.history.push('/');
     } catch(error) {
-      console.eror(error.message);
+      console.error(error.message);
     }
   };
 
@@ -29,10 +29,21 @@ const NavBar = (props) => {
         <Nav className="mr-auto">
           {
             props.auth.isAuthenticated ?
-              <Nav.Link href="/" onClick={handleLogout}>Logout</Nav.Link> :
-              <LinkContainer to="/login">
-                <Nav.Link>Login</Nav.Link>
-              </LinkContainer>
+              <>
+                <LinkContainer to="/change-password">
+                  <Nav.Link>Change password</Nav.Link>
+                </LinkContainer>
+                <Nav.Link href="/" onClick={handleLogout}>Logout</Nav.Link>
+              </>
+              :
+              <>
+                <LinkContainer to="/login">
+                  <Nav.Link>Login</Nav.Link>
+                </LinkContainer>
+                <LinkContainer to="/sign-up">
+                  <Nav.Link>SignUp</Nav.Link>
+                </LinkContainer>
+              </>
           }
         </Nav>
       </Navbar.Collapse>

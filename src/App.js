@@ -7,6 +7,8 @@ import Login from './components/auth/Login/Login';
 import ForgotPassword from './components/auth/ForgotPassword/ForfotPassword';
 import ForgotPasswordVerification from './components/auth/ForgotPasswordVerification/ForfotPasswordVerification';
 import ChangedPasswordConfirmation from './components/auth/ChangedPasswordConfirmation/ChangedPasswordConfirmation';
+import ChangePassword from './components/auth/ChangePassword/ChangePassword';
+import SignUp from './components/auth/SignUp';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -20,11 +22,11 @@ function App() {
 
   const setAuthenticatedUser = async () => {
     try {
-      setIsAuthenticated(true);
       const user = await Auth.currentAuthenticatedUser();
+      setIsAuthenticated(true);
       setUser(user);
     } catch(error) {
-      if (error !== 'No current user') {
+      if (error !== 'not authenticated') {
         console.error(error);
       }
     }
@@ -43,7 +45,9 @@ function App() {
       <Router>
         <NavBar auth={authProps} />
         <Switch>
+          <Route exact path="/sign-up" render={(props) => <SignUp auth={authProps} {...props} />}/>
           <Route exact path="/login" render={(props) => <Login auth={authProps} {...props} />}/>
+          <Route exact path="/change-password" render={(props) => <ChangePassword auth={authProps} {...props} />}/>
           <Route exact path="/forgot-password" render={(props) => <ForgotPassword auth={authProps} {...props} />}/>
           <Route exact path="/forgot-password-verification" render={(props) => <ForgotPasswordVerification auth={authProps} {...props} />}/>
           <Route exact path="/changed-password-confirmation" render={(props) => <ChangedPasswordConfirmation auth={authProps} {...props} />}/>

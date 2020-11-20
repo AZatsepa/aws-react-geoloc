@@ -37,7 +37,14 @@
             "error",
             "always"
         ],
-        "no-console": "warn"
+        "no-console": [
+            "warn",
+            {
+                "allow": [
+                    "error"
+                ]
+            }
+        ]
     },
     "ignorePatterns": [
         "reportWebVitals.js"
