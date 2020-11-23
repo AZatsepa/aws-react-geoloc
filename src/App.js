@@ -2,6 +2,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Auth } from 'aws-amplify';
+import * as Sentry from '@sentry/react';
+import { Integrations } from '@sentry/tracing';
+
 import NavBar from './components/NavBar/NavBar';
 import Login from './components/auth/Login/Login';
 import ForgotPassword from './components/auth/ForgotPassword/ForfotPassword';
@@ -10,6 +13,17 @@ import ChangedPasswordConfirmation from './components/auth/ChangedPasswordConfir
 import ChangePassword from './components/auth/ChangePassword/ChangePassword';
 import SignUp from './components/auth/SignUp';
 import GoogleMap from './components/GoogleMap/GoogleMap';
+
+Sentry.init({
+  dsn: process.env.REACT_APP_SENTRY_DSN,
+  integrations: [
+    new Integrations.BrowserTracing(),
+  ],
+
+  // We recommend adjusting this value in production, or using tracesSampler
+  // for finer control
+  tracesSampleRate: 1.0,
+});
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
