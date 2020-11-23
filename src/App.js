@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { Auth } from 'aws-amplify';
+import { Auth, API } from 'aws-amplify';
 import * as Sentry from '@sentry/react';
 import { Integrations } from '@sentry/tracing';
 
@@ -29,10 +29,21 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [user, setUser] = useState(null);
+  const [locations, setLocations] = useState([]);
+
+  const getLocations = async () => {
+    try {
+      const resp = await API.get('AWS-React-Geoloc', '/locations', {});
+      setLocations(resp);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
     setAuthenticatedUser()
       .then(() => setIsAuthenticating(false));
+    getLocations();
   }, []);
 
   const setAuthenticatedUser = async () => {
@@ -66,7 +77,7 @@ function App() {
           <Route exact path="/forgot-password" render={(props) => <ForgotPassword auth={authProps} {...props} />}/>
           <Route exact path="/forgot-password-verification" render={(props) => <ForgotPasswordVerification auth={authProps} {...props} />}/>
           <Route exact path="/changed-password-confirmation" render={(props) => <ChangedPasswordConfirmation auth={authProps} {...props} />}/>
-          <Route exact path="/google-map" render={(props) => <GoogleMap auth={authProps} {...props} />}/>
+          <Route exact path="/google-map" render={(props) => <GoogleMap auth={authProps} {...props} locations={locations} />}/>
         </Switch>
       </Router>
     </div>

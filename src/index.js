@@ -13,7 +13,16 @@ Amplify.configure({
     region: awsConfig.cognito.REGION,
     userPoolId: awsConfig.cognito.USER_POOL_ID,
     userPoolWebClientId: awsConfig.cognito.APP_CLIENT_ID
-  }
+  },
+  API: {
+    endpoints: [
+      {
+        name: 'AWS-React-Geoloc',
+        endpoint: awsConfig.apiGatewayURL,
+        region: awsConfig.cognito.REGION,
+      },
+    ],
+  },
 });
 
 ReactDOM.render(
