@@ -1,14 +1,12 @@
-import React from 'react';
+import React from "react";
 
-const ChangedPasswordConfirmation = () => {
-  return(
-    <section className="section auth">
-      <div className="container">
-        <h1>Change Password</h1>
-        <p>Your password has been successfully updated!</p>
-      </div>
-    </section>
-  );
-};
+const ChangedPasswordConfirmation = () => (
+  <section className="section auth">
+    <div className="container">
+      <h1>Change Password</h1>
+      <p>Your password has been successfully updated!</p>
+    </div>
+  </section>
+);
 
 export default ChangedPasswordConfirmation;

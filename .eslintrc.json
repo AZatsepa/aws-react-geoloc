@@ -7,8 +7,10 @@
     },
     "extends": [
         "eslint:recommended",
-        "plugin:react/recommended"
+        "plugin:react/recommended",
+        "airbnb"
     ],
+    "parser": "babel-eslint",
     "parserOptions": {
         "ecmaFeatures": {
             "jsx": true
@@ -18,7 +20,8 @@
     },
     "plugins": [
         "react",
-        "jest"
+        "jest",
+        "import"
     ],
     "rules": {
         "indent": [
@@ -31,7 +34,7 @@
         ],
         "quotes": [
             "error",
-            "single"
+            "double"
         ],
         "semi": [
             "error",

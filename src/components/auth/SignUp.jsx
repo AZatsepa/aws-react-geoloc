@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { object } from 'prop-types';
-import { Form, Button, Nav } from 'react-bootstrap';
-import { LinkContainer } from 'react-router-bootstrap';
-import { Auth } from 'aws-amplify';
+import React, { useState } from "react";
+import { shape, func } from "prop-types";
+import { Form, Button, Nav } from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
+import { Auth } from "aws-amplify";
 
 const SignUp = (props) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
 
   const handleSignUp = async (event) => {
     event.preventDefault();
@@ -16,16 +16,16 @@ const SignUp = (props) => {
         username,
         password,
         attributes: {
-          email: email
-        }
+          email,
+        },
       });
-      props.history.push('/');
+      props.history.push("/");
     } catch (error) {
       console.error(error);
     }
   };
 
-  return(
+  return (
     <Form onSubmit={handleSignUp}>
       <Form.Group controlId="formBasicUsername">
         <Form.Label>Username</Form.Label>
@@ -69,7 +69,9 @@ const SignUp = (props) => {
 };
 
 SignUp.propTypes = {
-  history: object,
+  history: shape({
+    push: func,
+  }).isRequired,
 };
 
 export default SignUp;
