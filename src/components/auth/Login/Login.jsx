@@ -1,25 +1,25 @@
-import React, { useState } from 'react';
-import { func, object, shape } from 'prop-types';
-import {Form, Button, Nav} from 'react-bootstrap';
-import { Auth } from 'aws-amplify';
-import {LinkContainer} from 'react-router-bootstrap';
+import React, { useState } from "react";
+import { func, shape } from "prop-types";
+import { Form, Button, Nav } from "react-bootstrap";
+import { Auth } from "aws-amplify";
+import { LinkContainer } from "react-router-bootstrap";
 
 const Login = (props) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleLogIn = async (event) => {
     event.preventDefault();
     try {
       await Auth.signIn(username, password);
       props.auth.setIsAuthenticated(true);
-      props.history.push('/');
-    } catch(error) {
+      props.history.push("/");
+    } catch (error) {
       console.error(error);
     }
   };
 
-  return(
+  return (
     <Form onSubmit={handleLogIn}>
       <Form.Group controlId="formBasicUsername">
         <Form.Label>Username</Form.Label>
@@ -54,10 +54,12 @@ const Login = (props) => {
 };
 
 Login.propTypes = {
-  history: object,
+  history: shape({
+    push: func,
+  }).isRequired,
   auth: shape({
     setIsAuthenticated: func,
-  }),
+  }).isRequired,
 };
 
 export default Login;

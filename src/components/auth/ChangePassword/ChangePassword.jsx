@@ -1,29 +1,25 @@
-import React, { useState } from 'react';
-import { object } from 'prop-types';
-import { Form, Button, Nav } from 'react-bootstrap';
-import { LinkContainer } from 'react-router-bootstrap';
-import { Auth } from 'aws-amplify';
+import React, { useState } from "react";
+import { shape, func } from "prop-types";
+import { Form, Button, Nav } from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
+import { Auth } from "aws-amplify";
 
 const ChangePassword = (props) => {
-  const [oldPassword, setOldPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
 
   const handleChangePassword = async (event) => {
     event.preventDefault();
     try {
       const user = await Auth.currentAuthenticatedUser();
-      await Auth.changePassword(
-        user,
-        oldPassword,
-        newPassword
-      );
-      props.history.push('/change-password-confirmation');
+      await Auth.changePassword(user, oldPassword, newPassword);
+      props.history.push("/change-password-confirmation");
     } catch (error) {
       console.error(error);
     }
   };
 
-  return(
+  return (
     <Form onSubmit={handleChangePassword}>
       <Form.Group controlId="formBasicOldPassword">
         <Form.Label>Old Password</Form.Label>
@@ -55,7 +51,9 @@ const ChangePassword = (props) => {
 };
 
 ChangePassword.propTypes = {
-  history: object,
+  history: shape({
+    push: func,
+  }).isRequired,
 };
 
 export default ChangePassword;

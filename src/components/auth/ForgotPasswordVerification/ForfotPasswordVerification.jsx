@@ -1,28 +1,24 @@
-import React, { useState } from 'react';
-import { object } from 'prop-types';
-import { Auth } from 'aws-amplify';
-import { Form, Button } from 'react-bootstrap';
+import React, { useState } from "react";
+import { shape, func } from "prop-types";
+import { Auth } from "aws-amplify";
+import { Form, Button } from "react-bootstrap";
 
 const ForgotPasswordVerification = (props) => {
-  const [verificationCode, setVerificationCode] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [verificationCode, setVerificationCode] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const passwordVerificationHandler = async event => {
+  const passwordVerificationHandler = async (event) => {
     event.preventDefault();
     try {
-      await Auth.forgotPasswordSubmit(
-        email,
-        verificationCode,
-        password,
-      );
-      props.history.push('/changed-password-confirmation');
-    } catch(error) {
+      await Auth.forgotPasswordSubmit(email, verificationCode, password);
+      props.history.push("/changed-password-confirmation");
+    } catch (error) {
       console.error(error);
     }
   };
 
-  return(
+  return (
     <Form onSubmit={passwordVerificationHandler}>
       <Form.Text className="text-muted">
         Please enter the verification code sent to your email address below,
@@ -66,7 +62,9 @@ const ForgotPasswordVerification = (props) => {
 };
 
 ForgotPasswordVerification.propTypes = {
-  history: object,
+  history: shape({
+    push: func,
+  }).isRequired,
 };
 
 export default ForgotPasswordVerification;
