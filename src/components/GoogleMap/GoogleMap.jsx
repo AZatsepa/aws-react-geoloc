@@ -12,23 +12,31 @@ class GoogleMap extends Component {
       currentLocation: DEFAULT_LOCATION,
       locations: [],
     };
+    this.webSocket = new WebSocket(process.env.REACT_APP_SOCKETS_URL);
   }
 
   async componentDidMount() {
     try {
-      const allLocations = await this.getLocations();
-      navigator.geolocation.getCurrentPosition((position) => {
-        const lat = position.coords.latitude;
-        const lng = position.coords.longitude;
-
+      this.webSocket.onmessage = (event) => {
+        const updatedLocation = JSON.parse(event.data);
         this.setState({
-          currentLocation: { lat, lng },
-          locations: allLocations,
+          locations: [...this.locationsForUpdate(updatedLocation), JSON.parse(event.data)],
         });
-      });
+      };
+
+      await this.fillLocations();
     } catch (error) {
       console.log(error);
     }
+  }
+
+  componentWillUnmount() {
+    this.webSocket.close();
+  }
+
+  locationsForUpdate = (loc) => {
+    const { locations } = this.state;
+    return locations.filter((location) => loc.id !== location.id);
   }
 
   // eslint-disable-next-line consistent-return
@@ -39,6 +47,18 @@ class GoogleMap extends Component {
       console.error(error);
     }
   };
+
+  fillLocations = async () => {
+    const allLocations = await this.getLocations();
+    navigator.geolocation.getCurrentPosition((position) => {
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+      this.setState({
+        currentLocation: { lat, lng },
+        locations: allLocations,
+      });
+    });
+  }
 
   render() {
     const { currentLocation, locations } = this.state;
