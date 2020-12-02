@@ -27,7 +27,6 @@ class GoogleMap extends Component {
       };
 
       await this.fillLocations();
-      throw new Error("Foo");
     } catch (error) {
       setError(error.message);
     }
@@ -44,10 +43,11 @@ class GoogleMap extends Component {
 
   // eslint-disable-next-line consistent-return
   getLocations = async () => {
+    const { setError } = this.context;
     try {
       return await API.get("AWS-React-Geoloc", "/locations", {});
     } catch (error) {
-      console.error(error);
+      setError(error.message);
     }
   };
 
