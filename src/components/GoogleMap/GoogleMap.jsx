@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import GoogleMapReact from "google-map-react";
 import { API } from "aws-amplify";
 import Marker from "./Marker";
+import AlertContext from "../context/AlertContext";
 
 const DEFAULT_LOCATION = { lat: 59.95, lng: 30.33 };
 
@@ -15,7 +16,8 @@ class GoogleMap extends Component {
     this.webSocket = new WebSocket(process.env.REACT_APP_SOCKETS_URL);
   }
 
-  async componentDidMount() {
+  componentDidMount = async () => {
+    const { setError } = this.context;
     try {
       this.webSocket.onmessage = (event) => {
         const updatedLocation = JSON.parse(event.data);
@@ -25,8 +27,9 @@ class GoogleMap extends Component {
       };
 
       await this.fillLocations();
+      throw new Error("Foo");
     } catch (error) {
-      console.log(error);
+      setError(error.message);
     }
   }
 
@@ -92,5 +95,7 @@ class GoogleMap extends Component {
     );
   }
 }
+
+GoogleMap.contextType = AlertContext;
 
 export default GoogleMap;

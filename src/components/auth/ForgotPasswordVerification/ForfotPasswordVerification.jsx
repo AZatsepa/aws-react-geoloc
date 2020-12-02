@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { shape, func } from "prop-types";
 import { Auth } from "aws-amplify";
 import { Form, Button } from "react-bootstrap";
+import AlertContext from "../../context/AlertContext";
 
 const ForgotPasswordVerification = (props) => {
+  const { setError } = useContext(AlertContext);
   const [verificationCode, setVerificationCode] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -14,7 +16,7 @@ const ForgotPasswordVerification = (props) => {
       await Auth.forgotPasswordSubmit(email, verificationCode, password);
       props.history.push("/changed-password-confirmation");
     } catch (error) {
-      console.error(error);
+      setError(error.message);
     }
   };
 
