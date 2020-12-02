@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { shape, func } from "prop-types";
 import { Form, Button, Nav } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { Auth } from "aws-amplify";
+import AlertContext from "../context/AlertContext";
 
 const SignUp = (props) => {
+  const { setError } = useContext(AlertContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
@@ -21,7 +23,7 @@ const SignUp = (props) => {
       });
       props.history.push("/");
     } catch (error) {
-      console.error(error);
+      setError(error.message);
     }
   };
 

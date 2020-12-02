@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import { func, shape, bool } from "prop-types";
 import { Nav, Navbar } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { Auth } from "aws-amplify";
 import { withRouter } from "react-router-dom";
+import AlertContext from "../context/AlertContext";
 
 const NavBar = ({ history, auth }) => {
+  const { setError } = useContext(AlertContext);
+
   const handleLogout = async (event) => {
     event.preventDefault();
     try {
@@ -14,7 +17,7 @@ const NavBar = ({ history, auth }) => {
       auth.setUser(null);
       history.push("/");
     } catch (error) {
-      console.error(error.message);
+      setError(error.message);
     }
   };
 

@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { func, shape } from "prop-types";
 import { Form, Button, Nav } from "react-bootstrap";
 import { Auth } from "aws-amplify";
 import { LinkContainer } from "react-router-bootstrap";
+import AlertContext from "../../context/AlertContext";
 
 const Login = (props) => {
+  const { setError } = useContext(AlertContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -15,7 +17,7 @@ const Login = (props) => {
       props.auth.setIsAuthenticated(true);
       props.history.push("/");
     } catch (error) {
-      console.error(error);
+      setError(error.message);
     }
   };
 

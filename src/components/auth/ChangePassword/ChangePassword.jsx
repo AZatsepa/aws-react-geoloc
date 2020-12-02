@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { shape, func } from "prop-types";
 import { Form, Button, Nav } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { Auth } from "aws-amplify";
+import AlertContext from "../../context/AlertContext";
 
 const ChangePassword = (props) => {
+  const { setError } = useContext(AlertContext);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
 
@@ -15,7 +17,7 @@ const ChangePassword = (props) => {
       await Auth.changePassword(user, oldPassword, newPassword);
       props.history.push("/change-password-confirmation");
     } catch (error) {
-      console.error(error);
+      setError(error.message);
     }
   };
 
