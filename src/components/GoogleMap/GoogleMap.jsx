@@ -1,6 +1,8 @@
 import React, { Component } from "react";
+import { shape } from "prop-types";
 import GoogleMapReact from "google-map-react";
-import { API } from "aws-amplify";
+import { API, Auth } from "aws-amplify";
+import MyMarker from "./MyMarker";
 import Marker from "./Marker";
 import AlertContext from "../context/AlertContext";
 
@@ -19,14 +21,8 @@ class GoogleMap extends Component {
   componentDidMount = async () => {
     const { setError } = this.context;
     try {
-      this.webSocket.onmessage = (event) => {
-        const updatedLocation = JSON.parse(event.data);
-        this.setState({
-          locations: [...this.locationsForUpdate(updatedLocation), JSON.parse(event.data)],
-        });
-      };
-
       await this.fillLocations();
+      this.startWebSocket();
     } catch (error) {
       setError(error.message);
     }
@@ -38,24 +34,62 @@ class GoogleMap extends Component {
 
   locationsForUpdate = (loc) => {
     const { locations } = this.state;
-    return locations.filter((location) => loc.id !== location.id);
+    return locations.filter((location) => loc.username !== location.username);
   }
 
   // eslint-disable-next-line consistent-return
   getLocations = async () => {
     const { setError } = this.context;
+    const { auth } = this.props;
     try {
-      return await API.get("AWS-React-Geoloc", "/locations", {});
+      const token = (await Auth.currentSession()).getIdToken().getJwtToken();
+      const locations = await API.get("AWS-React-Geoloc", "/locations", {
+        headers: {
+          Authorization: token,
+        },
+      });
+      return locations.filter((location) => location.username !== auth.user?.username);
     } catch (error) {
       setError(error.message);
     }
   };
+
+  saveCoordinate = async (lat, lng) => {
+    const { username } = await Auth.currentUserInfo();
+    if (!this.isWebsocketOpen()) return;
+    this.webSocket.send(
+      JSON.stringify({
+        message: {
+          username,
+          latitude: lat,
+          longitude: lng,
+        },
+        action: "save_location",
+      }),
+    );
+  }
+
+  startWebSocket = () => {
+    const { auth } = this.props;
+    this.webSocket.onmessage = (event) => {
+      const updatedLocation = JSON.parse(event.data);
+
+      if (!auth.user) return;
+      if (updatedLocation.message || updatedLocation.username === auth.user.username) return;
+      this.setState({
+        locations: [...this.locationsForUpdate(updatedLocation), updatedLocation],
+      });
+    };
+  }
+
+  isWebsocketOpen = () => this.webSocket.readyState === WebSocket.OPEN;
 
   fillLocations = async () => {
     const allLocations = await this.getLocations();
     navigator.geolocation.getCurrentPosition((position) => {
       const lat = position.coords.latitude;
       const lng = position.coords.longitude;
+      this.saveCoordinate(lat, lng);
       this.setState({
         currentLocation: { lat, lng },
         locations: allLocations,
@@ -81,12 +115,12 @@ class GoogleMap extends Component {
                 gestureHandling: "greedy",
               }}
             >
-              <Marker
+              <MyMarker
                 lat={currentLocation.lat}
                 lng={currentLocation.lng}
               />
               { locations.map((location) => (
-                <Marker key={location.id} lat={location.latitude} lng={location.longitude} />
+                <Marker key={location.username} lat={location.latitude} lng={location.longitude} />
               ))}
             </GoogleMapReact>
           )
@@ -97,5 +131,9 @@ class GoogleMap extends Component {
 }
 
 GoogleMap.contextType = AlertContext;
+
+GoogleMap.propTypes = {
+  auth: shape({}).isRequired,
+};
 
 export default GoogleMap;
